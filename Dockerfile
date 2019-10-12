@@ -1,5 +1,5 @@
-ARG	version
-FROM    debian:${version:-10}-slim as build
+ARG	version=10
+FROM    debian:$version-slim as build
 
 ENV	TMUX_VERSION="3.0"
 ENV	TMUX_DEV="-rc5"
