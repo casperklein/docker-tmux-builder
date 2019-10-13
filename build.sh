@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VERSION="$(</etc/debian_version)"
+VERSION=${VERSION:-10}
 DIR=${0%/*}
 cd "$DIR" || exit 1
 
