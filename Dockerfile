@@ -10,7 +10,7 @@ ENV	PACKAGES="gcc make libevent-dev libncurses5-dev"
 
 # Install packages
 RUN     apt-get update \
-&&	apt-get -y install $PACKAGES
+&&	apt-get -y --no-install-recommends install $PACKAGES
 
 # Build tmux
 ADD	$TMUX_RELEASE /
@@ -22,7 +22,7 @@ RUN	./configure && make
 COPY	rootfs /
 
 # Create debian package with checkinstall
-RUN	apt-get install -y file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_amd64.deb
+RUN	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_amd64.deb
 RUN	checkinstall -y --install=no \
 			--pkgname=tmux \
 			--pkgversion=$TMUX_VERSION$TMUX_DEV \
@@ -30,6 +30,6 @@ RUN	checkinstall -y --install=no \
 RUN	mv tmux_*.deb /
 
 # Build final image
-FROM	busybox
+FROM	busybox:latest
 COPY	--from=build /tmux_*.deb /
 CMD	mv /tmux*.deb /mnt
