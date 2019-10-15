@@ -1,8 +1,8 @@
 ARG	version=10
 FROM    debian:$version-slim as build
 
-ENV	TMUX_VERSION="3.0"
-ENV	TMUX_DEV="-rc5"
+ENV	TMUX_VERSION="2.9a"
+ENV	TMUX_DEV=""
 ENV	TMUX="tmux-$TMUX_VERSION$TMUX_DEV"
 ENV	TMUX_RELEASE="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/$TMUX.tar.gz"
 
