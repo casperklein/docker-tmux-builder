@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ueo pipefail
+
 VERSION="$(</etc/debian_version)"
 VERSION=${VERSION:-10}
 DIR=${0%/*}
