@@ -1,3 +1,5 @@
+.PHONY: default build clean copy-conf install uninstall
+
 default: build
 
 build:
