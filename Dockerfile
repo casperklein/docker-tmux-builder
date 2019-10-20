@@ -1,5 +1,5 @@
 ARG	version=10
-FROM    debian:$version-slim as build
+FROM    debian:$version-slim
 
 ENV	TMUX_VERSION="3.0"
 ENV	TMUX_DEV="-rc5"
@@ -33,9 +33,6 @@ RUN	checkinstall -y --install=no \
 			--pkgname=tmux \
 			--pkgversion=$TMUX_VERSION$TMUX_DEV \
 			--maintainer=casperklein@docker-tmux-builder
-RUN	mv tmux_*.deb /
 
-# Build final image
-FROM	busybox:latest
-COPY	--from=build /tmux_*.deb /
-CMD	mv /tmux*.deb /mnt
+# Move tmux debian package to /mnt on container start
+CMD	mv tmux_$TMUX_VERSION$TMUX_DEV*.deb /mnt
