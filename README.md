@@ -13,5 +13,5 @@ See `bash_completion_tmux.sh` for details.
 # Uninstall tmux
     make uninstall
     
-# Delete tmux debian package
+# Cleanup build environment
     make clean
