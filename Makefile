@@ -10,7 +10,7 @@ clean:
 	TAG=$$(grep TMUX_VERSION= Dockerfile | cut -d'"' -f2) && \
 	DEV=$$(grep TMUX_DEV= Dockerfile | cut -d'"' -f2) && \
 	IMAGE="casperklein/tmux-builder:$$TAG$$DEV" && \
-	rm -f tmux_$$IMAGE_1*.deb && \
+	rm -f tmux_$${TAG}$${DEV}-1*.deb && \
 	docker rmi $$IMAGE
 
 copy-conf:
