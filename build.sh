@@ -2,22 +2,22 @@
 
 set -ueo pipefail
 
-VERSION="$(</etc/debian_version)"
-VERSION=${VERSION:-10}
+USER=$(grep -P 'ENV\s+USER=".+?"' Dockerfile | cut -d'"' -f2)
+NAME=$(grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
+VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
+TAG="$USER/$NAME:$VERSION"
+
+NAME=${NAME//-builder}
+DEBIAN="$(</etc/debian_version)"
+DEBIAN=${DEBIAN:-10}
+
 DIR=${0%/*}
-cd "$DIR" || exit 1
+cd "$DIR"
 
-USER=casperklein
-NAME=tmux-builder
-TAG=$(grep TMUX_VERSION= Dockerfile | cut -d'"' -f2)
-DEV=$(grep TMUX_DEV= Dockerfile | cut -d'"' -f2)
-IMAGE="$USER/$NAME:$TAG$DEV"
-
-echo "Building tmux $TAG$DEV on Debian $VERSION"
+echo "Building: $NAME $VERSION"
 echo
-docker build -t "$IMAGE" --build-arg version="$VERSION" .
-echo
+docker build -t "$TAG" --build-arg debian="$DEBIAN" .
 
-echo "Copy tmux $TAG$DEV debian package to $(pwd)/"
-docker run --rm -v "$(pwd)":/mnt/ "$IMAGE"
+echo "Copy $NAME $VERSION debian package to $(pwd)/"
+docker run --rm -v "$(pwd)":/mnt/ "$TAG"
 echo

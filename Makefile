@@ -7,11 +7,11 @@ build:
 	./build.sh
 
 clean:
-	TAG=$$(grep TMUX_VERSION= Dockerfile | cut -d'"' -f2) && \
-	DEV=$$(grep TMUX_DEV= Dockerfile | cut -d'"' -f2) && \
-	IMAGE="casperklein/tmux-builder:$$TAG$$DEV" && \
-	rm -f tmux_$${TAG}$${DEV}-1*.deb && \
-	docker rmi $$IMAGE
+	USER=$$(grep -P 'ENV\s+USER=".+?"' Dockerfile | cut -d'"' -f2) && \
+	NAME=$$(grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2) && \
+	VERSION=$$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2) && \
+	rm -f tmux_$$VERSION-1*.deb && \
+	docker rmi $$USER/$$NAME:$$VERSION
 
 copy-conf:
 	cp tmux.conf /etc

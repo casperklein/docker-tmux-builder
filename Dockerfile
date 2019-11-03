@@ -1,5 +1,9 @@
-ARG	version=10
-FROM    debian:$version-slim
+ARG	debian=10
+FROM    debian:$debian-slim as build
+
+ENV	USER="casperklein"
+ENV	NAME="tmux-builder"
+ENV	VERSION="3.0-rc5"
 
 ENV	TMUX_VERSION="3.0"
 ENV	TMUX_DEV="-rc5"
@@ -32,7 +36,7 @@ RUN	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkin
 RUN	checkinstall -y --install=no \
 			--pkgname=tmux \
 			--pkgversion=$TMUX_VERSION$TMUX_DEV \
-			--maintainer=casperklein@docker-tmux-builder
+			--maintainer=$USER@$NAME:$VERSION
 
 # Move tmux debian package to /mnt on container start
 CMD	mv tmux_$TMUX_VERSION$TMUX_DEV*.deb /mnt
