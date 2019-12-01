@@ -3,11 +3,11 @@ FROM    debian:$debian-slim
 
 ENV	USER="casperklein"
 ENV	NAME="tmux-builder"
-ENV	VERSION="3.0"
+ENV	VERSION="3.0a"
 
-ENV	TMUX_VERSION="3.0"
+ENV	TMUX_VERSION="3.0a"
 ENV	TMUX_DEV=""
-ENV	TMUX_SHA256="9edcd78df80962ee2e6471a8f647602be5ded62bb41c574172bb3dc3d0b9b4b4"
+ENV	TMUX_SHA256="4ad1df28b4afa969e59c08061b45082fdc49ff512f30fc8e43217d7b0e5f8db9"
 ENV	TMUX="tmux-$TMUX_VERSION$TMUX_DEV"
 ENV	TMUX_RELEASE="https://github.com/tmux/tmux/releases/download/$TMUX_VERSION/$TMUX.tar.gz"
 
