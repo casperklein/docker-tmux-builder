@@ -37,6 +37,7 @@ RUN	checkinstall -y --install=no \
 			--pkgname=tmux \
 			--pkgversion=$TMUX_VERSION$TMUX_DEV \
 			--maintainer=$USER@$NAME:$VERSION
+			--pkggroup=admin
 
 # Move tmux debian package to /mnt on container start
 CMD	mv tmux_$TMUX_VERSION$TMUX_DEV*.deb /mnt
