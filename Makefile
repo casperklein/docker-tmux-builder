@@ -3,22 +3,23 @@
 
 USER := $(shell grep -P 'ENV\s+USER=".+?"' Dockerfile | cut -d'"' -f2)
 NAME := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
+APP := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2 | cut -d'-' -f1)
 VERSION := $(shell grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 
 default: build
 
 build:
-	./build.sh
+	./build-deb.sh
 
 clean:
-	rm -f tmux_$(VERSION)-1*.deb
+	rm -f $(APP)_$(VERSION)-1*.deb
 	docker rmi $(USER)/$(NAME):$(VERSION)
 
 copy-conf:
 	cp tmux.conf /etc
 
 install:
-	dpkg -i tmux_*.deb
+	dpkg -i $(APP)_*.deb
 
 uninstall:
-	apt-get purge tmux
+	apt-get purge $(APP)

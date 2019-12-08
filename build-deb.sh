@@ -8,16 +8,14 @@ VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 TAG="$USER/$NAME:$VERSION"
 
 NAME=${NAME//-builder}
-DEBIAN="$(</etc/debian_version)"
-DEBIAN=${DEBIAN:-10}
 
 DIR=${0%/*}
 cd "$DIR"
 
 echo "Building: $NAME $VERSION"
 echo
-docker build -t "$TAG" --build-arg debian="$DEBIAN" .
+docker build -t "$TAG" .
 
-echo "Copy $NAME $VERSION debian package to $(pwd)/"
-docker run --rm -v "$(pwd)":/mnt/ "$TAG"
+echo "Copy $NAME $VERSION debian package to $PWD/"
+docker run --rm -v "$PWD":/mnt/ "$TAG"
 echo
