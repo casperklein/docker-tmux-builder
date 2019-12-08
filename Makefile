@@ -12,14 +12,14 @@ build:
 	./build-deb.sh
 
 clean:
-	rm -f $(APP)_$(VERSION)-1*.deb
+	rm -f $(APP)_$(VERSION)-1_*.deb
 	docker rmi $(USER)/$(NAME):$(VERSION)
 
 copy-conf:
 	cp tmux.conf /etc
 
 install:
-	dpkg -i $(APP)_*.deb
+	dpkg -i $(APP)_$(VERSION)-1_*.deb
 
 uninstall:
 	apt-get purge $(APP)

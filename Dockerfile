@@ -39,4 +39,4 @@ RUN	checkinstall -y --install=no \
 			--pkggroup=admin
 
 # Move tmux debian package to /mnt on container start
-CMD	mv ${APP}_$VERSION$TMUX_DEV*.deb /mnt
+CMD	mv ${APP}_$VERSION$TMUX_DEV-1_*.deb /mnt
