@@ -9,7 +9,7 @@ VERSION := $(shell grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 default: build
 
 build:
-	./build-deb.sh
+	@./build-deb.sh
 
 clean:
 	rm -f $(APP)_$(VERSION)-1_*.deb
