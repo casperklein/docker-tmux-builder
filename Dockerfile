@@ -36,7 +36,7 @@ RUN	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkin
 RUN	checkinstall -y --install=no \
 			--pkgname=$APP \
 			--pkgversion=$VERSION$TMUX_DEV \
-			--maintainer=$USER@$NAME:$VERSION \
+			--maintainer=$USER@$NAME \
 			--pkggroup=admin
 
 # Move tmux debian package to /mnt on container start
