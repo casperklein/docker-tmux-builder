@@ -22,3 +22,6 @@ docker build -t "$TAG" $DEBIAN_VERSION .
 echo "Copy $NAME $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
 echo
+
+dpkg -I ${NAME}_${VERSION}-1_*.deb
+echo
