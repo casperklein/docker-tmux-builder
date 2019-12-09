@@ -5,6 +5,7 @@ ENV	USER="casperklein"
 ENV	NAME="tmux-builder"
 ENV	VERSION="3.0a"
 ENV	APP="tmux"
+ENV	GROUP="admin"
 
 ENV	TMUX_DEV=""
 ENV	TMUX_SHA256="4ad1df28b4afa969e59c08061b45082fdc49ff512f30fc8e43217d7b0e5f8db9"
@@ -37,7 +38,7 @@ RUN	checkinstall -y --install=no \
 			--pkgname=$APP \
 			--pkgversion=$VERSION$TMUX_DEV \
 			--maintainer=$USER@$NAME \
-			--pkggroup=admin
+			--pkggroup=$GROUP
 
 # Move tmux debian package to /mnt on container start
 CMD	mv ${APP}_$VERSION$TMUX_DEV-1_*.deb /mnt
