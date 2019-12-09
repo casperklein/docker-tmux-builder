@@ -1,4 +1,5 @@
-FROM    debian:10-slim
+ARG	version=10
+FROM    debian:$version-slim
 
 ENV	USER="casperklein"
 ENV	NAME="tmux-builder"

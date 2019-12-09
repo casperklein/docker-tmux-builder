@@ -9,12 +9,15 @@ TAG="$USER/$NAME:$VERSION"
 
 NAME=${NAME//-builder}
 
+DEBIAN_VERSION=
+[ -n "$1" ] && DEBIAN_VERSION="--build-arg version=$1"
+
 DIR=${0%/*}
 cd "$DIR"
 
 echo "Building: $NAME $VERSION"
 echo
-docker build -t "$TAG" .
+docker build -t "$TAG" $DEBIAN_VERSION .
 
 echo "Copy $NAME $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
