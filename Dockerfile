@@ -1,5 +1,5 @@
 ARG	version=10
-FROM    debian:$version-slim
+FROM	debian:$version-slim
 
 ENV	USER="casperklein"
 ENV	NAME="tmux-builder"
@@ -28,7 +28,7 @@ RUN	HASH=$(sha256sum $TMUX.tar.gz) && [ "${HASH:0:64}" == "$TMUX_SHA256" ] && ec
 RUN	tar xzvf $TMUX.tar.gz
 WORKDIR	$TMUX
 RUN	./configure && make
-RUN     echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak
+RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak
 
 # Copy root filesystem
 COPY	rootfs /
