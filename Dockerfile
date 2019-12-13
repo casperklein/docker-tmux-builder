@@ -17,7 +17,7 @@ ENV	PACKAGES="gcc make libevent-dev libncurses5-dev"
 SHELL	["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install packages
-RUN     apt-get update \
+RUN	apt-get update \
 &&	apt-get -y --no-install-recommends install $PACKAGES
 
 # Add/verify tmux source
