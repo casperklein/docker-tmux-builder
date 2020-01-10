@@ -35,10 +35,10 @@ COPY	rootfs /
 
 # Create debian package with checkinstall
 RUN	MASCHINE=$(uname -m) \
-&&	[ "$MASCHINE" == "x86_64" ] && ARCH=amd64 || \
-&&	[ "$MASCHINE" == "aarch64" ] && ARCH=amd64 || \
-&&	ARCH="armhf" \
-&&	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
+;	[ "$MASCHINE" == "x86_64" ] && ARCH=amd64 \
+||	[ "$MASCHINE" == "aarch64" ] && ARCH=amd64 \
+||	ARCH="armhf" \
+;	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
 RUN	checkinstall -y --install=no \
 			--pkgname=$APP \
 			--pkgversion=$VERSION$TMUX_DEV \
