@@ -39,7 +39,7 @@ RUN	MASCHINE=$(uname -m) \
 		[ "$MASCHINE" == "aarch64" ] && ARCH="arm64" || \
 			ARCH="armhf"; \
 	} \
-;	apt-get install -y --no-install-recommends file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
+;	apt-get -y --no-install-recommends install dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
 RUN	checkinstall -y --install=no \
 			--pkgname=$APP \
 			--pkgversion=$VERSION$TMUX_DEV \
