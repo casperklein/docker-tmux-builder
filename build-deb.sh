@@ -25,7 +25,8 @@ cd "$DIR"
 
 echo "Building: $NAME $VERSION"
 echo
-docker build -t "$TAG" ${DEBIAN_VERSION:-} --build-arg MAKEFLAGS="$MAKEFLAGS" .
+MAKEFLAGS=${MAKEFLAGS//--jobserver-auth=[[:digit:]],[[:digit:]]/}
+docker build -t "$TAG" ${DEBIAN_VERSION:-} --build-arg MAKEFLAGS="${MAKEFLAGS:-}" .
 
 echo "Copy $NAME $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
