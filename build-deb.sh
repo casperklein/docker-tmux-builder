@@ -25,6 +25,7 @@ cd "$DIR"
 
 echo "Building: $NAME $VERSION"
 echo
+MAKEFLAGS=${MAKEFLAGS:-}
 MAKEFLAGS=${MAKEFLAGS//--jobserver-auth=[[:digit:]],[[:digit:]]/}
 docker build -t "$TAG" ${DEBIAN_VERSION:-} --build-arg MAKEFLAGS="${MAKEFLAGS:-}" .
 
