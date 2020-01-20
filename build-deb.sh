@@ -7,21 +7,30 @@ NAME=$(grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
 VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 TAG="$USER/$NAME:$VERSION"
 
+MASCHINE=$(uname -m)
+if [ "$MASCHINE" == "x86_64" ]; then 
+	ARCH="amd64"
+elif [ "$MASCHINE" == "aarch64" ]; then
+	ARCH="arm64"
+else
+	ARCH="armhf"
+fi
+
 NAME=${NAME//-builder}
 
-DEBIAN_VERSION=
-[ -n "$1" ] && DEBIAN_VERSION="--build-arg version=$1"
+[ -n "${1:-}" ] && DEBIAN_VERSION="--build-arg version=$1"
+[ -n "${2:-}" ] && MAKEFLAGS="--build-arg MAKEFLAGS=$2"
 
 DIR=${0%/*}
 cd "$DIR"
 
 echo "Building: $NAME $VERSION"
 echo
-docker build -t "$TAG" $DEBIAN_VERSION .
+docker build -t "$TAG" ${DEBIAN_VERSION:-} ${MAKEFLAGS:-} .
 
 echo "Copy $NAME $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
 echo
 
-dpkg -I "${NAME}_${VERSION}"-1_*.deb
+dpkg -I "${NAME}_${VERSION}"-1_${ARCH}.deb
 echo
