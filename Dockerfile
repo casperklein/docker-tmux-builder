@@ -1,6 +1,7 @@
 ARG	version="10"
-ARG	MAKEFLAGS=""
 FROM	debian:$version-slim
+
+ARG	MAKEFLAGS=""
 
 ENV	USER="casperklein"
 ENV	NAME="tmux-builder"
@@ -35,14 +36,14 @@ RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be
 COPY	rootfs /
 
 # Create debian package with checkinstall
-RUN	MASCHINE=$(uname -m)			\
+RUN	MASCHINE=$(uname -m);			\
 	if [ "$MASCHINE" == "x86_64" ]; then	\
-		ARCH="amd64"			\
+		ARCH="amd64";			\
 	elif [ "$MASCHINE" == "aarch64" ]; then \
-		ARCH="arm64"			\
+		ARCH="arm64";			\
 	else					\
-		ARCH="armhf"			\
-	fi					\
+		ARCH="armhf";			\
+	fi;					\
 	apt-get -y --no-install-recommends install file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
 RUN	checkinstall -y --install=no			\
 			--pkgname=$APP			\
