@@ -22,7 +22,7 @@ ARCH := $(shell						\
 default: build
 
 build:
-	@./build-deb.sh "$(debian)" "$(makeflags)"
+	@./build-deb.sh "$(debian)"
 
 clean:
 	rm -f "$(APP)_$(VERSION)"-1_*.deb

@@ -19,7 +19,7 @@ fi
 NAME=${NAME//-builder}
 
 [ -n "${1:-}" ] && DEBIAN_VERSION="--build-arg version=$1"
-[ -n "${2:-}" ] && MAKEFLAGS="--build-arg MAKEFLAGS=$2"
+[ -n "${MAKEFLAGS:-}" ] && MAKEFLAGS="--build-arg MAKEFLAGS=$MAKEFLAGS"
 
 DIR=${0%/*}
 cd "$DIR"
