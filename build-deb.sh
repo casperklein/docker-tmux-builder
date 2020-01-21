@@ -28,6 +28,7 @@ echo
 MAKEFLAGS=${MAKEFLAGS:-}
 MAKEFLAGS=${MAKEFLAGS//--jobserver-auth=[[:digit:]],[[:digit:]]/}
 docker build -t "$TAG" ${DEBIAN_VERSION:-} --build-arg MAKEFLAGS="${MAKEFLAGS:-}" .
+echo
 
 echo "Copy $NAME $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
