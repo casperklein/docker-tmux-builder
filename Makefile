@@ -8,15 +8,19 @@ NAME := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
 APP := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2 | cut -d'-' -f1)
 VERSION := $(shell grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 
-ARCH := $(shell						\
-	MASCHINE=$$(uname -m);				\
-	if [ "$$MASCHINE" == "x86_64" ]; then		\
-		echo "amd64";				\
-	elif [ "$$MASCHINE" == "aarch64" ]; then	\
-		echo "arm64";				\
-	else						\
-		echo "armhf";				\
-	fi						\
+ARCH := $(shell			\
+	MASCHINE=$$(uname -m);	\
+	case "$$MASCHINE" in	\
+        x86_64)			\
+                ARCH="amd64"	\
+                ;;		\
+        aarch64)		\
+                ARCH="arm64"	\
+                ;;		\
+        *)			\
+                ARCH="armhf"	\
+                ;;		\
+        esac			\
 )
 
 default: build

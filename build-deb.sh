@@ -8,13 +8,17 @@ VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 TAG="$USER/$NAME:$VERSION"
 
 MASCHINE=$(uname -m)
-if [ "$MASCHINE" == "x86_64" ]; then 
-	ARCH="amd64"
-elif [ "$MASCHINE" == "aarch64" ]; then
-	ARCH="arm64"
-else
-	ARCH="armhf"
-fi
+case "$MASCHINE" in
+	x86_64)
+		ARCH="amd64"
+	       ;;
+	aarch64)
+		ARCH="arm64"
+		;;
+	*)
+		ARCH="armhf"
+		;;
+esac
 
 NAME=${NAME//-builder}
 
