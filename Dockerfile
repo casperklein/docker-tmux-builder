@@ -5,12 +5,12 @@ ARG	MAKEFLAGS=""
 
 ENV	USER="casperklein"
 ENV	NAME="tmux-builder"
-ENV	VERSION="3.0a"
+ENV	VERSION="3.1a"
 ENV	APP="tmux"
 ENV	GROUP="admin"
 
 ENV	TMUX_DEV=""
-ENV	TMUX_SHA256="4ad1df28b4afa969e59c08061b45082fdc49ff512f30fc8e43217d7b0e5f8db9"
+ENV	TMUX_SHA256="10687cbb02082b8b9e076cf122f1b783acc2157be73021b4bedb47e958f4e484"
 ENV	TMUX="tmux-$VERSION$TMUX_DEV"
 ENV	TMUX_RELEASE="https://github.com/tmux/tmux/releases/download/$VERSION/$TMUX.tar.gz"
 
