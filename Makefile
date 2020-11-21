@@ -34,9 +34,11 @@ clean:
 
 copy-conf:
 	cp tmux.conf /etc
+	cp tmux.pin  /etc/apt/preferences.d/tmux
 
 install:
 	dpkg -i "$(APP)_$(VERSION)"-1_$(ARCH).deb
 
 uninstall:
 	apt-get purge "$(APP)"
+	rm /etc/apt/preferences.d/tmux

@@ -1,0 +1,4 @@
+# we build tmux ourself, disable updates from repo
+Package: tmux
+Pin: version *
+Pin-Priority: -1
