@@ -9,8 +9,8 @@ APP := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2 | cut -d'-'
 VERSION := $(shell grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 
 ARCH := ${shell			\
-	MASCHINE=$$(uname -m);	\
-	case "$$MASCHINE" in	\
+	MACHINE=$$(uname -m);	\
+	case "$$MACHINE" in	\
         x86_64)			\
                 echo "amd64"	\
                 ;;		\

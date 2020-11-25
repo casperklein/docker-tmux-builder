@@ -7,8 +7,8 @@ NAME=$(grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
 VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
 TAG="$USER/$NAME:$VERSION"
 
-MASCHINE=$(uname -m)
-case "$MASCHINE" in
+MACHINE=$(uname -m)
+case "$MACHINE" in
 	x86_64)
 		ARCH="amd64"
 	       ;;

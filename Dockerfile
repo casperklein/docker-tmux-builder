@@ -37,8 +37,8 @@ RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be
 COPY	rootfs /
 
 # Create debian package with checkinstall
-RUN	MASCHINE=$(uname -m);	\
-	case "$MASCHINE" in	\
+RUN	MACHINE=$(uname -m);	\
+	case "$MACHINE" in	\
 	x86_64)			\
 		ARCH="amd64"	\
 		;;		\
