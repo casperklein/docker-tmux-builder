@@ -2,41 +2,25 @@
 
 set -ueo pipefail
 
-USER=$(grep -P 'ENV\s+USER=".+?"' Dockerfile | cut -d'"' -f2)
-NAME=$(grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
-VERSION=$(grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
-TAG="$USER/$NAME:$VERSION"
+APP=$(jq -er '.name'			< config.json | grep -oP '(?<=docker-).+?(?=-builder)') # docker-app-builder
+VERSION=$(jq -er '.version'		< config.json)
+TAG=$(jq -er '"\(.image):\(.version)"'	< config.json)
 
-MACHINE=$(uname -m)
-case "$MACHINE" in
-	x86_64)
-		ARCH="amd64"
-	       ;;
-	aarch64)
-		ARCH="arm64"
-		;;
-	*)
-		ARCH="armhf"
-		;;
-esac
-
-NAME=${NAME//-builder}
-
-[ -n "${1:-}" ] && DEBIAN_VERSION="--build-arg version=$1"
+ARCH=$(dpkg --print-architecture)
 
 DIR=${0%/*}
 cd "$DIR"
 
-echo "Building: $NAME $VERSION"
+echo "Building: $APP $VERSION"
 echo
 MAKEFLAGS=${MAKEFLAGS:-}
 MAKEFLAGS=${MAKEFLAGS//--jobserver-auth=[[:digit:]],[[:digit:]]/}
-docker build -t "$TAG" ${DEBIAN_VERSION:-} --build-arg MAKEFLAGS="${MAKEFLAGS:-}" .
+docker build -t "$TAG" --build-arg MAKEFLAGS="${MAKEFLAGS:-}" --build-arg VERSION="$VERSION" .
 echo
 
-echo "Copy $NAME $VERSION debian package to $PWD/"
+echo "Copy $APP $VERSION debian package to $PWD/"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
 echo
 
-dpkg -I "${NAME}_${VERSION}"-1_${ARCH}.deb
+dpkg -I "${APP}_${VERSION}-1_${ARCH}".deb
 echo

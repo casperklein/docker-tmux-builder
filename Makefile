@@ -3,34 +3,20 @@
 
 SHELL := /bin/bash
 
-USER := $(shell grep -P 'ENV\s+USER=".+?"' Dockerfile | cut -d'"' -f2)
-NAME := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2)
-APP := $(shell grep -P 'ENV\s+NAME=".+?"' Dockerfile | cut -d'"' -f2 | cut -d'-' -f1)
-VERSION := $(shell grep -P 'ENV\s+VERSION=".+?"' Dockerfile | cut -d'"' -f2)
+APP := $(shell jq -er '.name' < config.json | grep -oP '(?<=docker-).+?(?=-builder)')
+VERSION := $(shell jq -er '.version' < config.json)
+TAG := $(shell jq -er '"\(.image):\(.version)"' < config.json)
 
-ARCH := ${shell			\
-	MACHINE=$$(uname -m);	\
-	case "$$MACHINE" in	\
-        x86_64)			\
-                echo "amd64"	\
-                ;;		\
-        aarch64)		\
-                echo "arm64"	\
-                ;;		\
-        *)			\
-                echo "armhf"	\
-                ;;		\
-        esac			\
-}
+ARCH := $(shell dpkg --print-architecture)
 
 default: build
 
 build:
-	@./build-deb.sh "$(debian)"
+	@./build-deb.sh
 
 clean:
 	rm -f "$(APP)_$(VERSION)"-1_*.deb
-	docker rmi "$(USER)/$(NAME):$(VERSION)"
+	docker rmi "$(TAG)"
 
 copy-conf:
 	cp tmux.conf /etc

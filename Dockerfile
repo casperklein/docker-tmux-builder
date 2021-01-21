@@ -1,60 +1,44 @@
-ARG	version="10"
-FROM	debian:$version-slim
+FROM	debian:10-slim
 
-ARG	MAKEFLAGS=""
+ENV	GIT_USER="tmux"
+ENV	GIT_REPO="tmux"
+ENV	GIT_COMMIT="3.1c"
+ENV	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/releases/download/$GIT_COMMIT/$GIT_REPO-$GIT_COMMIT.tar.gz"
 
-ENV	USER="casperklein"
-ENV	NAME="tmux-builder"
-ENV	VERSION="3.1c"
-ENV	APP="tmux"
-ENV	GROUP="admin"
-
-ENV	TMUX_DEV=""
-ENV	TMUX_SHA256="918f7220447bef33a1902d4faff05317afd9db4ae1c9971bef5c787ac6c88386"
-ENV	TMUX="tmux-$VERSION$TMUX_DEV"
-ENV	TMUX_RELEASE="https://github.com/tmux/tmux/releases/download/$VERSION/$TMUX.tar.gz"
-
-ENV	PACKAGES="gcc make libevent-dev libncurses5-dev"
+ENV	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev"
+ENV	PACKAGES_CLEAN=""
 
 SHELL	["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install packages
-RUN	apt-get update \
-&&	apt-get -y --no-install-recommends install $PACKAGES
+ENV	DEBIAN_FRONTEND=noninteractive
+RUN	echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list.d/buster-backports.list \
+&&	apt-get update \
+&&	apt-get -y upgrade \
+&&	apt-get -y --no-install-recommends install $PACKAGES \
+&&	rm -rf /var/lib/apt/lists/*
 
-# Add/verify tmux source
-ADD	$TMUX_RELEASE /
-RUN	HASH=$(sha256sum $TMUX.tar.gz) && [ "${HASH:0:64}" == "$TMUX_SHA256" ] && echo "$TMUX.tar.gz: valid " || { echo -e "Stored Hash: $TMUX_SHA256\nFile Hash:   $HASH"; exit 1; }
+# Download source
+WORKDIR	/$GIT_REPO
+ADD	$GIT_ARCHIVE /
+RUN	tar --strip-component 1 -xzvf /$GIT_REPO-$GIT_COMMIT.tar.gz && rm /$GIT_REPO-$GIT_COMMIT.tar.gz
 
 # Build tmux
-RUN	tar xzvf $TMUX.tar.gz
-WORKDIR	$TMUX
+ARG	MAKEFLAGS=""
 RUN	./configure
 RUN	make
-RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak
-
-# Copy root filesystem
-COPY	rootfs /
 
 # Create debian package with checkinstall
-RUN	MACHINE=$(uname -m);	\
-	case "$MACHINE" in	\
-	x86_64)			\
-		ARCH="amd64"	\
-		;;		\
-	aarch64)		\
-		ARCH="arm64"	\
-		;;		\
-	*)			\
-		ARCH="armhf"	\
-		;;		\
-	esac;			\
-	apt-get -y --no-install-recommends install file dpkg-dev && dpkg -i /checkinstall_1.6.2-4_$ARCH.deb
+RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak
+ENV	APP="tmux"
+ENV	MAINTAINER="casperklein@docker-tmux-builder"
+ENV	GROUP="admin"
+ARG	VERSION
 RUN	checkinstall -y --install=no			\
 			--pkgname=$APP			\
-			--pkgversion=$VERSION$TMUX_DEV	\
-			--maintainer=$USER@$NAME	\
+			--pkgversion=$VERSION		\
+			--maintainer=$MAINTAINER	\
 			--pkggroup=$GROUP
 
-# Move tmux debian package to /mnt on container start
-CMD	mv ${APP}_$VERSION$TMUX_DEV-1_*.deb /mnt
+# Move debian package to /mnt on container start
+CMD	mv ${APP}_*.deb /mnt
