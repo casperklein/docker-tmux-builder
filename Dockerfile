@@ -29,12 +29,12 @@ RUN	./configure
 RUN	make
 
 # Create debian package with checkinstall
-RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak
 ENV	APP="tmux"
 ENV	MAINTAINER="casperklein@docker-tmux-builder"
 ENV	GROUP="admin"
 ARG	VERSION
-RUN	checkinstall -y --install=no			\
+RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak \
+&&	checkinstall -y --install=no			\
 			--pkgname=$APP			\
 			--pkgversion=$VERSION		\
 			--maintainer=$MAINTAINER	\
