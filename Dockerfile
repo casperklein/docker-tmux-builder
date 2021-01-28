@@ -41,4 +41,4 @@ RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be
 			--pkggroup=$GROUP
 
 # Move debian package to /mnt on container start
-CMD	mv ${APP}_*.deb /mnt
+CMD	["bash", "-c", "mv ${APP}_*.deb /mnt"]
