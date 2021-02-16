@@ -3,9 +3,9 @@ FROM	debian:10-slim
 ENV	GIT_USER="tmux"
 ENV	GIT_REPO="tmux"
 ENV	GIT_COMMIT="3.1c"
-ENV	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/releases/download/$GIT_COMMIT/$GIT_REPO-$GIT_COMMIT.tar.gz"
+ENV	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/archive/$GIT_COMMIT.tar.gz"
 
-ENV	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev"
+ENV	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev autoconf automake pkg-config bison"
 ENV	PACKAGES_CLEAN=""
 
 SHELL	["/bin/bash", "-o", "pipefail", "-c"]
@@ -21,12 +21,13 @@ RUN	echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sou
 # Download source
 WORKDIR	/$GIT_REPO
 ADD	$GIT_ARCHIVE /
-RUN	tar --strip-component 1 -xzvf /$GIT_REPO-$GIT_COMMIT.tar.gz && rm /$GIT_REPO-$GIT_COMMIT.tar.gz
+RUN	tar --strip-component 1 -xzvf /$GIT_COMMIT.tar.gz && rm /$GIT_COMMIT.tar.gz
 
 # Build tmux
 ARG	MAKEFLAGS=""
-RUN	./configure
-RUN	make
+RUN	./autogen.sh \
+&&	./configure \
+&&	make
 
 # Create debian package with checkinstall
 ENV	APP="tmux"
