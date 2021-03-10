@@ -18,9 +18,11 @@ MAKEFLAGS=${MAKEFLAGS//--jobserver-auth=[[:digit:]],[[:digit:]]/}
 docker build -t "$TAG" --build-arg MAKEFLAGS="${MAKEFLAGS:-}" --build-arg VERSION="$VERSION" .
 echo
 
-echo "Copy $APP $VERSION debian package to $PWD/"
+echo "Copy $APP $VERSION debian package to $PWD/${APP}_${VERSION}-1_${ARCH}.deb"
 docker run --rm -v "$PWD":/mnt/ "$TAG"
 echo
 
+echo "Package information:"
+echo
 dpkg -I "${APP}_${VERSION}-1_${ARCH}".deb
 echo
