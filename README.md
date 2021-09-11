@@ -7,13 +7,15 @@ When running **make**, tmux is build, packaged and copied to the current directo
 ## Build tmux debian package
     make
 
-## Build tmux debian package for debian 10
-    make debian=10
+## Build tmux debian package for older debian versions, e.g. Debian 10 (Buster)
+    DEBIAN=10
+    sed -i 's|^FROM.*|FROM debian:'$DEBIAN'-slim|' Dockerfile
+    make
     
 ## Install tmux debian package
     make install
     
-## Copy tmux.conf to /etc/tmux.conf
+## Copy tmux.conf to /etc/tmux.conf and tmux.pin to /etc/apt/preferences.d/tmux
     make copy-conf
 
 ## Bash completion

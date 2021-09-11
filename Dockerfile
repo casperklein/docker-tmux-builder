@@ -1,4 +1,4 @@
-FROM	debian:10-slim
+FROM	debian:11-slim
 
 ENV	GIT_USER="tmux"
 ENV	GIT_REPO="tmux"
