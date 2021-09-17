@@ -4,6 +4,10 @@ Builds a [tmux](https://github.com/tmux/tmux) debian package with [Docker](https
 
 When running **make**, tmux is build, packaged and copied to the current directory.
 
+## Prepare
+    git clone https://github.com/casperklein/docker-tmux-builder
+    cd docker-tmux-builder
+
 ## Build tmux debian package
     make
 
