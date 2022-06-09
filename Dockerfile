@@ -2,7 +2,7 @@ FROM	debian:11-slim
 
 ENV	GIT_USER="tmux"
 ENV	GIT_REPO="tmux"
-ENV	GIT_COMMIT="3.3"
+ENV	GIT_COMMIT="3.3a"
 ENV	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/archive/$GIT_COMMIT.tar.gz"
 
 ENV	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev autoconf automake pkg-config bison"
