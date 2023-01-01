@@ -1,17 +1,17 @@
 FROM	debian:11-slim
 
-ENV	GIT_USER="tmux"
-ENV	GIT_REPO="tmux"
-ENV	GIT_COMMIT="3.3a"
-ENV	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/archive/$GIT_COMMIT.tar.gz"
+ARG	GIT_USER="tmux"
+ARG	GIT_REPO="tmux"
+ARG	GIT_COMMIT="3.3a"
+ARG	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/archive/$GIT_COMMIT.tar.gz"
 
-ENV	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev autoconf automake pkg-config bison"
-ENV	PACKAGES_CLEAN=""
+ARG	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses5-dev autoconf automake pkg-config bison"
+ARG	PACKAGES_CLEAN=""
 
 SHELL	["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install packages
-ENV	DEBIAN_FRONTEND=noninteractive
+ARG	DEBIAN_FRONTEND=noninteractive
 RUN	echo 'deb http://deb.debian.org/debian buster-backports main' > /etc/apt/sources.list.d/buster-backports.list \
 &&	apt-get update \
 &&	apt-get -y upgrade \
@@ -30,10 +30,10 @@ RUN	./autogen.sh \
 &&	make
 
 # Create debian package with checkinstall
-ENV	APP="tmux"
-ENV	MAINTAINER="casperklein@docker-tmux-builder"
-ENV	GROUP="admin"
-ARG	VERSION
+ARG	APP="tmux"
+ARG	GROUP="admin"
+ARG	MAINTAINER="casperklein@docker-tmux-builder"
+ARG	VERSION="unknown"
 RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak \
 &&	checkinstall -y --install=no			\
 			--pkgname=$APP			\
@@ -43,3 +43,8 @@ RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be
 
 # Move debian package to /mnt on container start
 CMD	["bash", "-c", "mv ${APP}_*.deb /mnt"]
+
+LABEL	org.opencontainers.image.description="Builds a tmux debian package"
+LABEL	org.opencontainers.image.source="https://github.com/casperklein/docker-tmux-builder/"
+LABEL	org.opencontainers.image.title="docker-tmux-builder"
+LABEL	org.opencontainers.image.version="$VERSION"
