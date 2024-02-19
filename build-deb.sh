@@ -26,3 +26,5 @@ echo "Package information:"
 echo
 dpkg -I "${APP}_${VERSION}-1_${ARCH}".deb
 echo
+dpkg -c "${APP}_${VERSION}-1_${ARCH}".deb
+echo
