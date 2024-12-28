@@ -43,12 +43,13 @@ ARG	MAINTAINER="casperklein@docker-tmux-builder"
 ARG	VERSION="unknown"
 RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak \
 # fstrans=no since debian12 -->  https://bugs.launchpad.net/ubuntu/+source/checkinstall/+bug/976380
-&&	checkinstall -y --install=no --fstrans=no       \
-			--pkgname=$APP                  \
-			--pkgversion=$VERSION           \
-			--maintainer=$MAINTAINER        \
-			--pkggroup=$GROUP               \
-			--requires=libevent-core-2.1-7
+&&	checkinstall -y --fstrans=no                                        \
+			--install=no                                        \
+			--pkgname=$APP                                      \
+			--pkgversion=$VERSION                               \
+			--maintainer=$MAINTAINER                            \
+			--pkggroup=$GROUP                                   \
+			--requires="libc6, libevent-core-2.1-7, libtinfo6"
 
 # Move debian package to /mnt on container start
 CMD	["bash", "-c", "mv ${APP}_*.deb /mnt"]
