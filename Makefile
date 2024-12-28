@@ -15,18 +15,17 @@ build:
 	@./build-deb.sh
 
 clean:
-	rm -f "$(APP)_$(VERSION)"-1_*.deb
-	docker rmi "$(TAG)"
+	@rm -f "$(APP)_$(VERSION)"-1_*.deb
+	@docker rmi "$(TAG)"
 
 copy-conf:
-	cp tmux.conf /etc
-	cp tmux.pin  /etc/apt/preferences.d/tmux
+	@cp -v tmux.conf /etc
+	@cp -v tmux.pin  /etc/apt/preferences.d/tmux
 
 install:
-	@dpkg -i "$(APP)_$(VERSION)"-1_$(ARCH).deb
-	@apt-get -y install "$$(apt-cache search libevent-core | awk '{print $$1}')"
+	@apt-get -y install ./"$(APP)_$(VERSION)"-1_$(ARCH).deb
 
 uninstall:
-	apt-get purge "$(APP)"
-	rm /etc/apt/preferences.d/tmux
-	apt-get purge "$$(apt-cache search libevent-core | awk '{print $$1}')"
+	@apt-get purge "$(APP)"
+	@rm -vf /etc/apt/preferences.d/tmux
+	@rm -vi /etc/tmux.conf || true
