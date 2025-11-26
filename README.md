@@ -1,6 +1,6 @@
 # docker-tmux-builder
 
-Builds a [tmux](https://github.com/tmux/tmux) Debian 12 package with [Docker](https://www.docker.com/). Supports `amd64`, `arm64` and `armhf` architecture.
+Builds a [tmux](https://github.com/tmux/tmux) Debian 13 package with [Docker](https://www.docker.com/). Tested architectures: `amd64`
 
 When running **make**, tmux is build, packaged and copied to the current directory.
 
@@ -23,7 +23,7 @@ When running **make**, tmux is build, packaged and copied to the current directo
 
 ## Bash completion
 
-See `bash_completion_tmux.sh` for details.
+Get completion file from [here](https://raw.githubusercontent.com/scop/bash-completion/refs/heads/main/completions/tmux).
 
 ## Uninstall tmux
 

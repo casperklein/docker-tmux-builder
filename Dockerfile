@@ -1,8 +1,8 @@
-FROM	debian:12-slim
+FROM	debian:13-slim
 
 ARG	GIT_USER="tmux"
 ARG	GIT_REPO="tmux"
-ARG	GIT_COMMIT="3.5a"
+ARG	GIT_COMMIT="3.6"
 # ARG	GIT_ARCHIVE="https://github.com/$GIT_USER/$GIT_REPO/archive/$GIT_COMMIT.tar.gz"
 ARG	GIT_ARCHIVE="https://github.com/${GIT_USER}/${GIT_REPO}/releases/download/${GIT_COMMIT}/tmux-${GIT_COMMIT}.tar.gz"
 ARG	ARCHIVE="tmux-${GIT_COMMIT}.tar.gz"
