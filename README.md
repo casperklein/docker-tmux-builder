@@ -1,6 +1,6 @@
 # docker-tmux-builder
 
-Builds a [tmux](https://github.com/tmux/tmux) Debian 13 package with [Docker](https://www.docker.com/). Tested architectures: `amd64`
+Builds a [tmux](https://github.com/tmux/tmux) Debian 13 package with [Docker](https://www.docker.com/). Tested architectures are `amd64`, `arm64` and `armhf`.
 
 When running **make**, tmux is build, packaged and copied to the current directory.
 
