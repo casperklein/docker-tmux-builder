@@ -23,7 +23,7 @@ When running **make**, tmux is build, packaged and copied to the current directo
 
 ## Bash completion
 
-Get completion file from [here](https://raw.githubusercontent.com/scop/bash-completion/refs/heads/main/completions/tmux).
+Get completion file from [here](https://github.com/scop/bash-completion/blob/main/completions-core/tmux.bash).
 
 ## Uninstall tmux
 
