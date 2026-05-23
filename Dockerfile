@@ -7,52 +7,60 @@ ARG	GIT_COMMIT="3.6a"
 ARG	GIT_ARCHIVE="https://github.com/${GIT_USER}/${GIT_REPO}/releases/download/${GIT_COMMIT}/tmux-${GIT_COMMIT}.tar.gz"
 ARG	ARCHIVE="tmux-${GIT_COMMIT}.tar.gz"
 
-# ARG	PACKAGES="file checkinstall dpkg-dev gcc make libevent-dev libncurses-dev autoconf automake pkg-config yacc"
-ARG     PACKAGES="gcc checkinstall libevent-dev yacc libncurses-dev wget"
+ARG	PACKAGES="gcc libevent-dev yacc libncurses-dev wget make"
 
-SHELL	["/bin/bash", "-o", "pipefail", "-c"]
+# Package ENVs
+ENV	APP="tmux"
+ARG	VERSION
+ARG	PRIORITY="optional"
+ARG	SECTION="admin"
+ARG	MAINTAINER="docker-tmux-builder"
+ARG	TARGETARCH
+ARG	DEPENDS="libc6, libevent-core-2.1-7, libtinfo6"
+ARG	DESCRIPTION="tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen."
+
+# Build ENVs
+ARG	INCLUDE_DOCS="1"      # Include docs? [0|1]
+ARG	BUILD_DIR="/build"    # Root build directory
+ARG	PACKAGE_DIR="package" # Package subdirectory
+
+SHELL	["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 # Install packages
 ARG	DEBIAN_FRONTEND=noninteractive
-RUN	apt-get update \
-&&	apt-get -y upgrade \
-&&	apt-get -y install $PACKAGES \
-&&	rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+	apt-get update
+	apt-get -y upgrade
+	apt-get -y install $PACKAGES
+	rm -rf /var/lib/apt/lists/*
+EOF
 
 # Download source
-WORKDIR /build
-RUN	wget "$GIT_ARCHIVE" \
-&&	tar xzvf "$ARCHIVE" \
-&&	rm "$ARCHIVE"
-
-#! workdir must be tmux-3.X; just "tmux" makes checkinstall behave weird.
-#! tmux binary is put in /usr/local/tmux instead of /usr/local/bin/tmux
-WORKDIR "/build/tmux-$GIT_COMMIT"
+WORKDIR "${BUILD_DIR}"
+RUN <<EOF
+	wget --no-verbose "$GIT_ARCHIVE"
+	tar xzvf "$ARCHIVE"
+	rm "$ARCHIVE"
+EOF
 
 # Build tmux
+WORKDIR "$BUILD_DIR/$APP-$GIT_COMMIT"
 ARG	MAKEFLAGS=""
-# only needed when building from "git clone"
-# RUN	./autogen.sh
-RUN	./configure \
-&&	make
+RUN <<EOF
+	# ./autogen.sh # only needed when building from "git clone"
+	./configure
+	make
+EOF
 
-# Create debian package with checkinstall
-ENV	APP="tmux"
-ARG	GROUP="admin"
-ARG	MAINTAINER="casperklein@docker-tmux-builder"
-ARG	VERSION="unknown"
-RUN	echo 'tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.' > description-pak \
-# fstrans=no since debian12 -->  https://bugs.launchpad.net/ubuntu/+source/checkinstall/+bug/976380
-&&	checkinstall -y --fstrans=no                                        \
-			--install=no                                        \
-			--pkgname=$APP                                      \
-			--pkgversion=$VERSION                               \
-			--maintainer=$MAINTAINER                            \
-			--pkggroup=$GROUP                                   \
-			--requires="libc6, libevent-core-2.1-7, libtinfo6"
+# Run 'make install', capture FS changes and prepare package in $BUILD_DIR/$PACKAGE_DIR
+COPY	capture.sh /usr/local/bin/
+RUN	capture.sh make install
+
+# Build .deb package
+RUN	dpkg-deb --build "$BUILD_DIR/$PACKAGE_DIR" /${APP}_$VERSION-1_"$TARGETARCH".deb
 
 # Move debian package to /mnt on container start
-CMD	["bash", "-c", "mv ${APP}_*.deb /mnt"]
+CMD	["bash", "-c", "mv /${APP}_*.deb /mnt"]
 
 LABEL	org.opencontainers.image.description="Builds a tmux debian package"
 LABEL	org.opencontainers.image.source="https://github.com/casperklein/docker-tmux-builder/"
