@@ -1,6 +1,6 @@
 FROM	debian:13-slim
 
-ARG	GIT_COMMIT="3.6b"
+ARG	GIT_COMMIT="3.7b"
 ARG	GIT_ARCHIVE="https://github.com/tmux/tmux/releases/download/${GIT_COMMIT}/tmux-${GIT_COMMIT}.tar.gz"
 ARG	ARCHIVE="tmux-${GIT_COMMIT}.tar.gz"
 
