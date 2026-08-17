@@ -1,6 +1,6 @@
 FROM	debian:13-slim
 
-ARG	GIT_COMMIT="3.7b"
+ARG	GIT_COMMIT="3.7c"
 ARG	GIT_ARCHIVE="https://github.com/tmux/tmux/releases/download/${GIT_COMMIT}/tmux-${GIT_COMMIT}.tar.gz"
 ARG	ARCHIVE="tmux-${GIT_COMMIT}.tar.gz"
 
@@ -38,13 +38,17 @@ RUN <<EOF
 	wget --no-verbose "$GIT_ARCHIVE"
 	tar xzvf "$ARCHIVE"
 	rm "$ARCHIVE"
+
+# Alternative:
+	# git clone https://github.com/tmux/tmux .
+	# git checkout release_3.7c
 EOF
 
 # Build tmux
 WORKDIR "$BUILD_DIR/$APP-$GIT_COMMIT"
 ARG	MAKEFLAGS=""
 RUN <<EOF
-	# ./autogen.sh # only needed when building from "git clone"
+	# ./autogen.sh # only needed when building from "git clone". additional packages needed: git automake pkg-config
 	./configure
 	make
 EOF
